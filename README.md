@@ -7,7 +7,7 @@
 6. Customize the information you want on stream in the app, then watch it update on the overlay (note social media @s under the casternames alternate so you can't see the bluesky @s in this screenshot).![image](https://github.com/user-attachments/assets/7a622f7b-51ee-4e4c-8f3a-1c84d27f6ff7)
 ![Screenshot 2025-01-11 17-36-28](https://github.com/user-attachments/assets/9136352b-587c-47c6-9379-06c45e36ad81)
 
-Big thanks to RONC3NA, EgregiousDI, and fmx! You guys are the best.
+Big thanks to RONC3NA, EgregiousDI, and fmx, who have helped in countless ways over the development of this project.
 
 Enjoy!
 
