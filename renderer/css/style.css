@@ -1,0 +1,498 @@
+@font-face {
+  font-family: 'SUPERMARIO64SIGNFONT';
+  src: url('../fonts/SUPERMARIO64SIGNFONT.ttf');
+}
+
+:root {
+  --text1: #ececec;
+  --text2: #b6b6b6;
+  --bg1: #131318;
+  --bg2: #383838;
+  --bg3: #1e1e24;
+  --bg4: #444444b6;
+  --bg5: #2b2b2b;
+  --selected: #2ba4eb;
+  --focused: #686868;
+}
+
+body {
+  overflow: hidden;
+  padding: 0px;
+  margin: 0px;
+  background-color: var(--bg2);
+  color: var(--text1);
+  user-select: none;
+  font-family: 'SUPERMARIO64SIGNFONT';
+  font-size: 16px;
+}
+
+/* general text input class*/
+.textInput {
+  outline: none;
+  border: none;
+  background: var(--bg4);
+  color: var(--text1);
+  height: 30px;
+  padding: 5px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 1px solid var(--bg4);
+  transition: border-color 100ms;  
+  display: flex; /* Use flexbox */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  text-align: center;
+}
+
+input[type="text"] {
+  font-family: 'SUPERMARIO64SIGNFONT';
+  font-size: 16px;
+}
+
+.textInput:hover {
+  border-color: var(--selected);
+}
+
+.textInput:focus {
+  border-color: var(--focused);
+}
+
+/* main viewport */
+#viewport {
+  /* position: relative; */
+  width: 300%;
+  height: 100%;
+  z-index: 2;
+  display: flex;
+  transition: right 300ms ease;
+}
+
+/* where all the magic happens */
+#overlay {
+  width: calc(100% / 3);
+  height: 100%;
+  transition: opacity 300ms;
+}
+
+/* player stuff */
+#playerRegion {
+  display: flex;
+  height: 150px;
+}
+
+.player {
+  width: 49%;
+  position: relative;
+}
+
+.playerPFPBox {
+  width: 100%;
+  height: 100%;
+}
+
+.playerPFP {
+  right: 0px;
+  top: 0px;
+  height: 100%;
+  object-fit: contain;
+  z-index: -1;
+  box-sizing: border-box;
+  float: right;
+}
+
+.pEditor {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  align-items: center;
+}
+
+.pInfo {
+  padding-left: 10px;
+}
+
+#p1Tag, #p2Tag {
+  float: left;
+  min-width: 34px;
+  max-width: 70px;
+  width: 34px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+#p1Name, #p2Name {
+  float: left;
+  min-width: 60px;
+  max-width: 174px;
+  width: 60px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+/* general text input class*/
+.textInput {
+  outline: none;
+  border: none;
+  background: var(--bg4);
+  color: var(--text1);
+  height: 30px;
+  padding: 5px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 1px solid var(--bg4);
+  transition: border-color 100ms;  
+}
+input[type="text"] {
+  font-family: 'SUPERMARIO64SIGNFONT';
+  font-size: 16px;
+}
+
+.textInput:hover {
+  border-color: var(--selected);
+}
+
+.textInput:focus {
+  border-color: var(--focused);
+}
+
+/* round propierties */
+#roundInfo {
+  height: 40px;
+  border-top: thin;
+  border-bottom: thin;
+  border-style: solid none solid;
+  border-color: var(--bg4);
+  display: flex;
+  align-items: center;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bestOf {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.bestOfBox {
+  background-color: var(--bg4);
+  height: 30px;
+  width: 57px;
+  padding: 5px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 1px solid var(--focused);
+  transition: border-color 100ms;
+  display: flex; /* Use flexbox */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+.bestOfBox:hover {
+  border-color: var(--selected);
+  transform: scale(1); /* cheap trick to show a correct border */
+}
+
+.bestOfBox:hover {
+  border-color: var(--selected);
+  transform: scale(1); /* cheap trick to show a correct border */
+}
+
+#bo1Div {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+#bo3Div {
+  border-radius: 0px;
+}
+#bo5Div {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  /* margin-left: -1px; */
+}
+
+#roundName, #tournamentName {
+  width: 100%;
+  text-align: center;
+  margin-right: 4px;
+}
+
+.scoreInfo {
+  margin-left: 10px;
+  font-family: 'SUPERMARIO64SIGNFONT';
+  display: flex;
+  align-items: center;
+}
+
+.scoreBox {
+  background-color: var(--bg4);
+  height: 30px;
+  padding: 5px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 1px solid var(--bg4);
+  transition: border-color 100ms;
+  display: flex;
+  align-items: center;
+  color: var(--text2);
+  margin-right: 10px;
+}
+.scoreBox:hover {
+  border-color: var(--selected);
+}
+
+#file-label {
+  background-color: var(--bg4);
+  height: 30px;
+  width: 73px;
+  padding: 5px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 1px solid var(--bg4);
+  transition: border-color 100ms;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--text2);
+  margin-left: 10px;
+}
+
+#file-label:hover {
+  border-color: var(--selected);
+}
+
+.scoreCheck {
+  margin-left: 5px;
+  width: 14px;
+  height: 14px;
+  outline: none;
+}
+
+#file1, #file2 {
+  display: none;
+}
+
+input[type='file'] {
+  color: rgba(0, 0, 0, 0)
+}
+
+.wlButtons {
+  display: none;
+  font-size: 16px;
+  padding-left: 5px;
+  display: flex; /* Use flexbox */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+.wlBox {
+  background-color: var(--bg4);
+  height: 30px;
+  width: 30px;
+  padding: 5px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 1px solid var(--bg4);
+  transition: border-color 100ms;
+  float: left;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+}
+.wlBox:hover {
+  border-color: var(--selected);
+}
+
+#p1W, #p2W {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  /* box-sizing: border-box;
+  padding-left: 7px; */
+  
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+#p1W:hover, #p2W:hover {
+  transform: scale(1);
+}
+#p1L, #p2L {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  box-sizing: border-box;
+  padding-left: 7px;
+  
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+#playerSep {
+  width: 2%;
+  height: 100%;
+}
+
+#swapButton {
+  width: 100%;
+  height: 85%;
+  background-color: var(--bg4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#swapButton:hover {
+  filter: brightness(1.3);
+}
+#clearButton {
+  width: 100%;
+  height: 15%;
+  background-color: var(--bg4);
+  cursor: pointer;
+}
+#clearButton:hover {
+  filter: brightness(1.3);
+}
+
+.midIcon {
+  height: 12px;
+  width: 12px;
+  fill: #b6b6b6;
+  opacity: 0;
+  transform: scale(1.5, 1.5);
+  transition: opacity 200ms, transform 200ms;
+}
+#swapButton:hover #swapIcon {
+  opacity: 1;
+  transform: scale(2, 2);
+}
+#clearButton:hover #clearIcon {
+  opacity: 1;
+  transform: scale(2, 2);
+}
+
+/* caster region */
+#casterInfo {
+  height: 60px;
+  padding: 10px;
+  padding: 8px 10px 12px 10px;
+}
+
+.casterIcon {
+  height: 20px;
+  width: 20px;
+  margin-left: -5px;
+  margin-top: 5px;
+  fill: #b6b6b6;
+}
+
+#bskyIcon {
+  margin-right: 4px;
+  margin-left: 5px;
+}
+#twitchIcon {
+  margin-right: 4px;
+  margin-left: 5px;
+}
+
+#caster1 {
+  padding-bottom: 4px;
+  display: flex;
+  justify-items: center;
+}
+#caster2 {
+  padding-bottom: 4px;
+  display: flex;
+  justify-items: center;
+}
+
+#cName1, #cName2 {
+  width: 190px;
+  margin-left: 4px;
+  align-items: center;
+  /* text-align: center; */
+}
+
+#cbsky1, #cbsky2, #cTwitch1, #cTwitch2 {
+  width: 156px;
+  margin-left: 1px;
+  align-items: center;
+  /* text-align: center; */
+}
+
+/* the bottom bar */
+#botBar {
+  width: 100%;
+  height: 28px;
+  display: flex;
+  background-color: var(--bg5);
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.botRegion {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.botText {
+  color: var(--text1);
+  font-family: 'SUPERMARIO64SIGNFONT';
+}
+
+.rectangle {
+  height: 2px;
+  width: 100%;
+  margin: 10px;
+  background-color: var(--text2);
+}
+
+#updateRegion:hover {
+  background-color: var(--bg3);
+  border-radius: 3px;
+}
+
+#updateRegion:active{
+  background-color: var(--bg5);
+}
+
+.image-preview{
+  position: fixed;
+  
+  margin-top: -80px; 
+  margin-left: 150px;
+
+  width: 90px;
+  height: 90px;
+
+  max-width: 90px;
+  max-height: 90px;
+  min-width: 90px;
+  min-height: 90px;
+  
+  border: 2px solid var(--bg4);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  -ms-transform-origin-x: 50px;
+  -ms-transform-origin-y: -20px;
+}
+
+.image-preview:hover {
+  border-color: var(--selected); /* Change border color on hover */
+}
+
+.image-preview__image{
+  display: none;
+  width: 100%;
+}
+
+.image-preview__default-text{
+  display: block;
+}
