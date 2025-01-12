@@ -1,4 +1,4 @@
-**Setup Guide [Visual Guide](https://www.youtube.com/watch?v=bu39oUrxvbA)**
+**Setup Guide [Video Guide](https://www.youtube.com/watch?v=bu39oUrxvbA)**
 1. Download [this](https://github.com/dista64/SM64-Tournament-Stream-Tool/releases/tag/SM64).
 2. Extract 'SM64 Tournament Stream Tool.zip'.
 3. Open the following folders: 'SM64 Tournament Stream Tool\resources\Stream Tool' and you should see 'Game Scoreboard.html'. ![image](https://github.com/user-attachments/assets/7b4500de-fb1d-42d0-8100-9adcd7df11b6)
