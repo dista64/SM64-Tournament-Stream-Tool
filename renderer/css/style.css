@@ -49,6 +49,16 @@ input[type="text"] {
   font-size: 16px;
 }
 
+input[type="number"]{
+  font-family: 'SUPERMARIO64SIGNFONT';
+  font-size: 16px;
+}
+
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button{
+  -webkit-appearance:none
+}
+
 .textInput:hover {
   border-color: var(--selected);
 }
@@ -212,6 +222,18 @@ input[type="text"] {
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
   /* margin-left: -1px; */
+}
+
+#startTimerDiv {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+#stopTimerDiv {
+  border-radius: 0px;
+}
+#resetTimerDiv {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
 }
 
 #roundName, #tournamentName {
@@ -458,6 +480,14 @@ input[type='file'] {
 
 #updateRegion:active{
   background-color: var(--bg5);
+}
+
+#timerRegion {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .image-preview{

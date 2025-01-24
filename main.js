@@ -11,12 +11,12 @@ function createMainWindow() {
     mainWindow = new BrowserWindow({
         title: 'TTT Tool',
         width: 600,
-        height: 340,
+        height: 380,
 
-        minWidth: 600,
-        minHeight: 340,
-        maxWidth: 600,
-        maxHeight: 340,
+        // minWidth: 600,
+        // minHeight: 340,
+        // maxWidth: 600,
+        // maxHeight: 340,
 
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
@@ -44,10 +44,10 @@ function createMainWindow() {
     // });
 
     // Open devtools if in dev env
-    // if (isDev){
-    //     mainWindow.webContents.openDevTools();
-    //     debugWindow.webContents.openDevTools();
-    // }
+    if (isDev){
+        mainWindow.webContents.openDevTools();
+        // debugWindow.webContents.openDevTools();
+    }
 
     //debugWindow.removeMenu();
 
