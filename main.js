@@ -10,7 +10,7 @@ let mainWindow;
 function createMainWindow() {
     mainWindow = new BrowserWindow({
         title: 'TTT Tool',
-        width: 600,
+        width: 584,
         height: 380,
 
         // minWidth: 600,
