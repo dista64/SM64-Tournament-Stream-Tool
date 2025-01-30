@@ -50,6 +50,13 @@ const p2L = document.getElementById('p2L');
 
 const roundInp = document.getElementById('roundName');
 
+const display = document.getElementById("timer");
+const countDown = document.getElementById("countDownLength");
+let timer = null;
+let startTime = 0;
+let elapsedTime = 0;
+let isRunning = false;
+
 function init() {
     checkRound();
     // Listener for update button
@@ -103,6 +110,70 @@ function init() {
     document.getElementById('swapButton').addEventListener("click", swap);
     // Add a listener to the clear button
     document.getElementById('clearButton').addEventListener("click", clearPlayers);
+
+    // Add listeners for timer control buttons
+    document.getElementById("startTimerDiv").addEventListener("click", startCountDown);
+    document.getElementById("stopTimerDiv").addEventListener("click", stopTimer);
+    document.getElementById("resetTimerDiv").addEventListener("click", resetTimer);
+}
+
+let countdownTimer;
+
+function startCountDown() {
+    if (!isRunning) {
+        let remainingTime = countDown.value; // Use the countdown value
+        countdownTimer = setInterval(function() {
+            if (remainingTime > 0) {
+                // Display the countdown in the format: "00:03" for 3 seconds remaining
+                let minutes = Math.floor(remainingTime / 60);
+                let seconds = remainingTime % 60;
+                display.textContent = String(seconds);
+                remainingTime--;
+            } else {
+                clearInterval(countdownTimer); // Stop the countdown
+                display.textContent = "GO!";  // Display "GO!"
+                setTimeout(startTimer, 1000);  // Wait 1 second, then start the main timer
+            }
+        }, 1000);
+    }
+}
+
+function startTimer() {
+    if (!isRunning) {
+        startTime = Date.now() - elapsedTime + 1000;
+        timer = setInterval(updateTimer, 1000);
+        isRunning = true;
+    }
+}
+
+function stopTimer(){
+    if(isRunning){
+        clearInterval(timer);
+        elapsedTime = Date.now() - startTime;
+        isRunning = false;
+    }
+}
+
+function resetTimer(){
+    clearInterval(timer);
+    startTime = 0;
+    elapsedTime = 0;
+    isRunning = false;
+    display.textContent = "00:00:00";
+
+}
+
+function updateTimer(){
+    const currentTime = Date.now();
+    elapsedTime = currentTime - startTime;
+    let hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+    let minutes = Math.floor(elapsedTime / (1000 * 60) % 60);
+    let seconds = Math.floor(elapsedTime/1000 % 60);
+
+    hours = String(hours).padStart(2, "0");
+    minutes = String(minutes).padStart(2, "0");
+    seconds = String(seconds).padStart(2, "0");
+    display.textContent = `${hours}:${minutes}:${seconds}`;
 }
 
 function showImage1() {
