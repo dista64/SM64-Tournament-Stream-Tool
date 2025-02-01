@@ -10,6 +10,7 @@ let introDelay = .8; //all animations will get this delay when the html loads (u
 let p1ScorePrev, p1wlPrev;
 let p2ScorePrev, p2wlPrev;
 let bestOfPrev;
+let timerTogglePrev;
 
 //
 let p1Pic, p1PicPrev;
@@ -83,6 +84,8 @@ async function getData(scInfo) {
 	let p1Pic = scInfo['p1Pic'];
 	let p2Pic = scInfo['p2Pic'];
 
+	let timerToggle = scInfo['timerStatus'];
+
 
 	//first, things that will happen only the first time the html loads
 	if (startup) {
@@ -112,7 +115,7 @@ async function getData(scInfo) {
 		// updateColor('p1Color', 'p1Name', p1Color);
 		// p1ColorPrev = p1Color;
 
-
+		resizeText(document.getElementById('timerWrapper'));
 		// took notes from player 1? well, this is exactly the same!
 		updatePlayerName('p2Wrapper', 'p2Name', 'p2Team', p2Name, p2Team);
 		gsap.fromTo("#p2Wrapper", 
@@ -131,6 +134,8 @@ async function getData(scInfo) {
 
 		// //set this for later
 		bestOfPrev = bestOf;
+		timerTogglePrev = timerToggle;
+		// TODO make the function that animates the timer background in and out
 
 		updateTournament(tournament);
 		document.getElementById('tournamentName').textContext = tournament;
@@ -197,21 +202,23 @@ async function getData(scInfo) {
 			fadeIn("#caster2Icon", .2);
 		}
 
-
-		//check if the team has a logo we can place on the overlay
-		// updateTeamLogo("teamLogoP1", p1Team);
-		// updateTeamLogo("teamLogoP2", p2Team);
-		// //animate them
-		// fadeIn("#teamLogoP1");
-		// fadeIn("#teamLogoP2");
-
-
+		gsap.to("#overlayTimer", {y: -pMove, opacity: 0, ease: "power1.in", duration: fadeOutTime, onComplete: timerMoved});
+			function timerMoved() {
+				//change the thing!
+				//updateTimer(p1WL, 1);
+				//move it back!
+				if (timerToggle != false) {
+					gsap.to("#overlayTimer", {delay: .3, y: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+				} else {
+					gsap.to("#overlayTimer", {y: 0, duration: fadeInTime});
+				}
+			}
 		startup = false; //next time we run this function, it will skip all we just did
 	}
 
 	//now things that will happen constantly
 	else {
-		
+		// resizeText(document.getElementById(timerWrapper));
 		//player 1 time!
 		if (document.getElementById('p1Name').textContent != p1Name ||
 			document.getElementById('p1Team').textContent != p1Team) {
@@ -236,8 +243,20 @@ async function getData(scInfo) {
 			p1PicPrev = p1Pic;
 		}
 		
-
-
+		if(timerTogglePrev != timerToggle){
+			gsap.to("#overlayTimer", {y: -pMove, opacity: 0, ease: "power1.in", duration: fadeOutTime, onComplete: timerMoved});
+			function timerMoved() {
+				//change the thing!
+				//updateTimer(p1WL, 1);
+				//move it back!
+				if (timerToggle != false) {
+					gsap.to("#overlayTimer", {delay: .3, y: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+				} else {
+					gsap.to("#overlayTimer", {y: 0, duration: fadeInTime});
+				}
+			}
+			timerTogglePrev = timerToggle;
+		}
 		//the [W] and [L] status for grand finals
 		if (p1wlPrev != p1WL) {
 			//move it away!
@@ -758,6 +777,11 @@ function moveScoresIntro(pNum, bestOf, pWL, move) {
 
 }
 
+// function moveTimerIntro(){
+// 	if(timerToggle){
+// 		gsap.to("#overlayTimer", {delay: .3, y: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+// 	}
+// }
 
 //check if winning or losing in a GF, then change image
 function updateWL(pWL, playerNum) {
@@ -770,6 +794,13 @@ function updateWL(pWL, playerNum) {
 	if (startup) {pWLEL.addEventListener("error", () => {
 		showNothing(pWLEL)
 	})}
+}
+
+function updateTimer(timer){
+	const timerEL = document.getElementById("timer");
+	if (timer == true){
+		timerEL.setAttribute
+	}
 }
 
 //text resize, keeps making the text smaller until it fits

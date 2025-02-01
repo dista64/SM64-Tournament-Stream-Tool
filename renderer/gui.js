@@ -56,6 +56,10 @@ let timer = null;
 let startTime = 0;
 let elapsedTime = 0;
 let isRunning = false;
+let countedDown = false;
+
+const timerCheckBox = document.getElementById("timerCheck");
+let timerOn = false;
 
 function init() {
     checkRound();
@@ -115,52 +119,75 @@ function init() {
     document.getElementById("startTimerDiv").addEventListener("click", startCountDown);
     document.getElementById("stopTimerDiv").addEventListener("click", stopTimer);
     document.getElementById("resetTimerDiv").addEventListener("click", resetTimer);
+
+    timerCheckBox.addEventListener("click",toggleTimer);
 }
 
 let countdownTimer;
+let remainingTime;
+
+function toggleTimer() {
+    if(timerCheckBox.checked == false){
+        timerOn = false;
+    } else{
+        timerOn = true;
+    }
+}
 
 function startCountDown() {
-    if (!isRunning) {
-        let remainingTime = countDown.value; // Use the countdown value
-        countdownTimer = setInterval(function() {
-            if (remainingTime > 0) {
-                // Display the countdown in the format: "00:03" for 3 seconds remaining
-                let minutes = Math.floor(remainingTime / 60);
-                let seconds = remainingTime % 60;
-                display.textContent = String(seconds);
-                remainingTime--;
-            } else {
-                clearInterval(countdownTimer); // Stop the countdown
-                display.textContent = "GO!";  // Display "GO!"
-                setTimeout(startTimer, 1000);  // Wait 1 second, then start the main timer
+    if(!countedDown){
+        if (!isRunning) {
+            if (remainingTime === undefined) {
+                remainingTime = countDown.value; // Initialize remaining time only once
             }
-        }, 1000);
+            countdownTimer = setInterval(function() {
+                if (remainingTime > 0) {
+                    // Display the countdown in the format: "00:03" for 3 seconds remaining
+                    // let minutes = Math.floor(remainingTime / 60);
+                    let seconds = remainingTime % 60;
+                    display.textContent = `${seconds}`;
+                    localStorage.setItem('timerValue', display.textContent);
+                    remainingTime--;
+                } else {
+                    clearInterval(countdownTimer); // Stop the countdown
+                    display.textContent = "GO!";  // Display "GO!"
+                    localStorage.setItem('timerValue', display.textContent);
+                    setTimeout(startTimer, 0);  // Wait 1 second, then start the main timer
+                }
+            }, 1000);
+        }
+        countedDown = true;
+    } else{
+        startTimer();
     }
 }
 
 function startTimer() {
     if (!isRunning) {
-        startTime = Date.now() - elapsedTime + 1000;
+        startTime = Date.now() - elapsedTime;
         timer = setInterval(updateTimer, 1000);
         isRunning = true;
     }
 }
 
-function stopTimer(){
-    if(isRunning){
+function stopTimer() {
+    if (isRunning) {
         clearInterval(timer);
         elapsedTime = Date.now() - startTime;
         isRunning = false;
     }
 }
 
-function resetTimer(){
+function resetTimer() {
     clearInterval(timer);
+    clearInterval(countdownTimer); // Clear countdown timer as well
     startTime = 0;
     elapsedTime = 0;
+    remainingTime = undefined; // Reset the remaining time when reset
     isRunning = false;
+    countedDown = false;
     display.textContent = "00:00:00";
-
+    localStorage.setItem('timerValue', display.textContent);
 }
 
 function updateTimer(){
@@ -170,10 +197,20 @@ function updateTimer(){
     let minutes = Math.floor(elapsedTime / (1000 * 60) % 60);
     let seconds = Math.floor(elapsedTime/1000 % 60);
 
-    hours = String(hours).padStart(2, "0");
-    minutes = String(minutes).padStart(2, "0");
-    seconds = String(seconds).padStart(2, "0");
-    display.textContent = `${hours}:${minutes}:${seconds}`;
+    // hours = String(hours).padStart(2, "0");
+    // minutes = String(minutes).padStart(2, "0");
+    // seconds = String(seconds).padStart(2, "0");
+
+    if(Math.floor(elapsedTime/1000) < 60){
+        display.textContent=`${seconds}`;
+    } else if (Math.floor(elapsedTime/(60*1000) < 60)) {
+        seconds = String(seconds).padStart(2, "0");
+        display.textContent=`${minutes}:${seconds}`;
+    } else {
+        minutes = String(minutes).padStart(2, "0");
+        display.textContent = `${hours}:${minutes}:${seconds}`;
+    }
+    localStorage.setItem('timerValue', display.textContent);
 }
 
 function showImage1() {
@@ -593,7 +630,7 @@ function writeScoreboard() {
     let p2File = document.getElementById('file2').files[0];
     let streamToolDirectory = './resources/Stream Tool/Resources';
     let textsFolder = `${streamToolDirectory}/Texts/Simple Texts`
-
+    console.log(timerOn)
     fetch('../resources/Stream Tool/Resources/Player Icons/black.png')
         .then(response => response.blob())
         .then(blob => {
@@ -620,6 +657,7 @@ function writeScoreboard() {
                 caster2Name: document.getElementById('cName2').value,
                 caster2Bluesky: document.getElementById('cbsky2').value,
                 caster2Twitch: document.getElementById('cTwitch2').value,
+                timerStatus: timerOn,
             };
 
             let data = JSON.stringify(scoreboardJson, null, 2);
@@ -641,7 +679,7 @@ function writeScoreboard() {
             fs.writeFileSync(path.join(textsFolder, "Caster 2 Name.txt"), document.getElementById('cName2').value);
             fs.writeFileSync(path.join(textsFolder, "Caster 2 Bluesky.txt"), document.getElementById('cbsky2').value);
             fs.writeFileSync(path.join(textsFolder, "Caster 2 Twitch.txt"), document.getElementById('cTwitch2').value);
-
+            
             // Copy p1File and p2File to another directory
             const copyFile = (file, defaultFile, filePath) => {
                 let reader = new FileReader();
