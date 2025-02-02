@@ -146,13 +146,13 @@ function startCountDown() {
                     // let minutes = Math.floor(remainingTime / 60);
                     let seconds = remainingTime % 60;
                     display.textContent = `${seconds}`;
-                    // localStorage.setItem('timerValue', display.textContent);
+                    localStorage.setItem('timerValue', display.textContent);
                     electron.sendTimerUpdate(display.textContent);
                     remainingTime--;
                 } else {
                     clearInterval(countdownTimer); // Stop the countdown
                     display.textContent = "GO!";  // Display "GO!"
-                    // localStorage.setItem('timerValue', display.textContent);
+                    localStorage.setItem('timerValue', display.textContent);
                     electron.sendTimerUpdate(display.textContent);
                     setTimeout(startTimer, 0);  // Wait 1 second, then start the main timer
                 }
@@ -189,7 +189,7 @@ function resetTimer() {
     isRunning = false;
     countedDown = false;
     display.textContent = "00:00:00";
-    // localStorage.setItem('timerValue', display.textContent);
+    localStorage.setItem('timerValue', display.textContent);
     electron.sendTimerUpdate(display.textContent);
 }
 
@@ -213,7 +213,7 @@ function updateTimer(){
         minutes = String(minutes).padStart(2, "0");
         display.textContent = `${hours}:${minutes}:${seconds}`;
     }
-    // localStorage.setItem('timerValue', display.textContent);
+    localStorage.setItem('timerValue', display.textContent);
     electron.sendTimerUpdate(display.textContent);
 }
 
