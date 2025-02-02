@@ -168,13 +168,6 @@
             <div id="resetTimerDiv" class="bestOfBox">Reset</div>
             <div id="timerBox">
               <span id="timer">00:00:00</span>
-              <script>
-                let timerValue = 0;
-                setInterval(() => {
-                  timerValue++;
-                  window.electron.sendTimerUpdate(timerValue);
-                }, 1000);
-              </script>
             </div>
           </div>
         </div>
