@@ -702,19 +702,9 @@
             <img src="Resources/Overlay/Timer BG.png" class="absol">
             <span id="timerWrapper" class="wrappers">
                 <script>
-                    function updateTimer() {
-                        // Get the updated timer value from sessionStorage each time
-                        const timerValue = localStorage.getItem('timerValue');
-                        console.log(timerValue);
-                        if (timerValue !== null) {
-                            document.getElementById('timer').textContent = timerValue;
-                        } else {
-                            document.getElementById('timer').textContent = "Sadge";
-                        }
-                    }
-        
-                    // Update the timer every second to stay synced
-                    setInterval(updateTimer, 1000);
+                    window.electron.onTimerSync((timerValue) => {
+                        document.getElementById('timer').innerText = timerValue;
+                    })
                 </script>
                 <span id="timer" class="timer">OKAY</span>
             </span>
