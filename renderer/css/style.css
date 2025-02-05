@@ -49,6 +49,16 @@ input[type="text"] {
   font-size: 16px;
 }
 
+input[type="number"]{
+  font-family: 'SUPERMARIO64SIGNFONT';
+  font-size: 16px;
+}
+
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button{
+  -webkit-appearance:none
+}
+
 .textInput:hover {
   border-color: var(--selected);
 }
@@ -214,7 +224,20 @@ input[type="text"] {
   /* margin-left: -1px; */
 }
 
-#roundName, #tournamentName {
+#startTimerDiv {
+  margin-left: 5px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+#stopTimerDiv {
+  border-radius: 0px;
+}
+#resetTimerDiv {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+#roundName, #tournamentName, #countDownLength {
   width: 100%;
   text-align: center;
   margin-right: 4px;
@@ -440,8 +463,10 @@ input[type='file'] {
 }
 
 .botText {
+  height: 100%;
   color: var(--text1);
   font-family: 'SUPERMARIO64SIGNFONT';
+  align-content: center;
 }
 
 .rectangle {
@@ -458,6 +483,91 @@ input[type='file'] {
 
 #updateRegion:active{
   background-color: var(--bg5);
+}
+
+#settingsRegion {
+  width: 32px;
+  background-color: var(--bg3);
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+#configIcon {
+  width: 20px;
+  height: 20px;
+}
+
+#configIcon path {
+  fill: var(--text2);
+}
+
+#settingsRegion:hover {
+  background-color: var(--bg1);
+}
+
+#settingsRegion:active{
+  background-color: var(--bg5);
+}
+
+/* settings section */
+#settings {
+  width: calc(100% / 3);
+  height: 300px;
+  background-color: var(--bg5);
+  z-index: 2;
+}
+
+#settingsTitle {
+  width: 40%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Roboto-Medium";
+  border-bottom-style: solid;
+  border-color: var(--bg4);
+}
+
+#actualSettings {
+  width: 40%;
+  padding-top: 5px;
+}
+
+.settingBox {
+  padding: 2px 0px 2px 10px;
+  display: flex;
+  outline: none;
+  /* background-color: violet; */
+}
+.settingBox:hover {
+  background-color: var(--bg2);
+}
+
+.settingsCheck {
+  outline: none;
+}
+
+.settingsText {
+  width: 100%;
+}
+
+#timerRegion {
+  width: 100%;
+  /* height: 100%; */
+  display: flex;
+  justify-content: left;
+  padding-bottom: 5px;
+}
+
+#countDownLength {
+  width: 80px;
+}
+
+#timerBox {
+  width: 70px;
+  padding: 5px;
+  justify-content: center;
+  justify-items: center;
 }
 
 .image-preview{

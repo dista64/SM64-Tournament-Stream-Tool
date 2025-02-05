@@ -50,6 +50,21 @@ const p2L = document.getElementById('p2L');
 
 const roundInp = document.getElementById('roundName');
 
+const display = document.getElementById("timer");
+const countDown = document.getElementById("countDownLength");
+let timer = null;
+let startTime = 0;
+let elapsedTime = 0;
+let isRunning = false;
+let countedDown = false;
+
+const timerCheckBox = document.getElementById("timerCheck");
+let timerOn = false;
+
+let streamToolDirectory = './resources/Stream Tool/Resources';
+let timerFolder = `${streamToolDirectory}/Texts/Timer Info`;
+let textsFolder = `${streamToolDirectory}/Texts/Simple Texts`;
+
 function init() {
     checkRound();
     // Listener for update button
@@ -103,6 +118,112 @@ function init() {
     document.getElementById('swapButton').addEventListener("click", swap);
     // Add a listener to the clear button
     document.getElementById('clearButton').addEventListener("click", clearPlayers);
+
+    // Add listeners for timer control buttons
+    document.getElementById("startTimerDiv").addEventListener("click", startCountDown);
+    document.getElementById("stopTimerDiv").addEventListener("click", stopTimer);
+    document.getElementById("resetTimerDiv").addEventListener("click", resetTimer);
+
+    timerCheckBox.addEventListener("click",toggleTimer);
+
+    fs.writeFileSync(path.join(timerFolder, "Start Time.txt"), '0');
+    fs.writeFileSync(path.join(timerFolder, "Elapsed Time.txt"), '0');
+}
+
+let countdownTimer;
+let remainingTime;
+
+function toggleTimer() {
+    if(timerCheckBox.checked == false){
+        document.getElementById('countDownLength').disabled = true;
+        document.getElementById('startTimerDiv').disabled = true;
+        document.getElementById('stopTimerDiv').disabled = true;
+        document.getElementById('resetTimerDiv').disabled = true;
+        timerOn = false;
+    } else{
+        document.getElementById('countDownLength').disabled = false;
+        document.getElementById('startTimerDiv').disabled = false;
+        document.getElementById('stopTimerDiv').disabled = false;
+        document.getElementById('resetTimerDiv').disabled = false;
+        timerOn = true;
+    }
+}
+
+function startCountDown() {
+    if(!countedDown && countDown.value != 0){
+        fs.writeFileSync(path.join(timerFolder, "Elapsed Time.txt"), String(countDown.value));
+        if (!isRunning) {
+            if (remainingTime === undefined) {
+                remainingTime = countDown.value; // Initialize remaining time only once
+            }
+            countdownTimer = setInterval(function() {
+                if (remainingTime > 0) {
+                    // Display the countdown in the format: "00:03" for 3 seconds remaining
+                    // let minutes = Math.floor(remainingTime / 60);
+                    let seconds = remainingTime % 60;
+                    display.textContent = `${seconds}`;
+                    remainingTime--;
+                } else {
+                    clearInterval(countdownTimer); // Stop the countdown
+                    display.textContent = "GO!";  // Display "GO!"
+                    setTimeout(startTimer, 0);  // Wait 1 second, then start the main timer
+                }
+            }, 1000);
+        }
+        countedDown = true;
+    } else{
+        startTimer();
+    }
+}
+
+function startTimer() {
+    if (!isRunning) {
+        startTime = Date.now() - elapsedTime;
+        fs.writeFileSync(path.join(timerFolder, "Start Time.txt"), String(startTime));
+        fs.writeFileSync(path.join(timerFolder, "Elapsed Time.txt"), '0');
+        timer = setInterval(updateTimer, 1000);
+        isRunning = true;
+    }
+}
+
+function stopTimer() {
+    if (isRunning) {
+        clearInterval(timer);
+        elapsedTime = Date.now() - startTime;
+        fs.writeFileSync(path.join(timerFolder, "Elapsed Time.txt"), String(elapsedTime));
+        isRunning = false;
+    }
+}
+
+function resetTimer() {
+    clearInterval(timer);
+    clearInterval(countdownTimer); // Clear countdown timer as well
+    startTime = 0;
+    elapsedTime = 0;
+    fs.writeFileSync(path.join(timerFolder, "Start Time.txt"), String(startTime));
+    fs.writeFileSync(path.join(timerFolder, "Elapsed Time.txt"), String(elapsedTime));
+    remainingTime = undefined; // Reset the remaining time when reset
+    isRunning = false;
+    countedDown = false;
+    display.textContent = "0";
+}
+
+function updateTimer(){
+    const currentTime = Date.now();
+    elapsedTime = currentTime - startTime;
+    let hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+    let minutes = Math.floor(elapsedTime / (1000 * 60) % 60);
+    let seconds = Math.floor(elapsedTime/1000 % 60);
+
+    if(Math.floor(elapsedTime/1000) < 60){
+        display.textContent=`${seconds}`;
+    } else if (Math.floor(elapsedTime/(60*1000) < 60)) {
+        seconds = String(seconds).padStart(2, "0");
+        display.textContent=`${minutes}:${seconds}`;
+    } else {
+        minutes = String(minutes).padStart(2, "0");
+        display.textContent = `${hours}:${minutes}:${seconds}`;
+    }
 }
 
 function showImage1() {
@@ -520,9 +641,8 @@ function setScore(score, tick1, tick2, tick3) {
 function writeScoreboard() {
     let p1File = document.getElementById('file1').files[0];
     let p2File = document.getElementById('file2').files[0];
-    let streamToolDirectory = './resources/Stream Tool/Resources';
-    let textsFolder = `${streamToolDirectory}/Texts/Simple Texts`
-
+    
+    console.log(timerOn)
     fetch('../resources/Stream Tool/Resources/Player Icons/black.png')
         .then(response => response.blob())
         .then(blob => {
@@ -549,6 +669,7 @@ function writeScoreboard() {
                 caster2Name: document.getElementById('cName2').value,
                 caster2Bluesky: document.getElementById('cbsky2').value,
                 caster2Twitch: document.getElementById('cTwitch2').value,
+                timerStatus: timerOn,
             };
 
             let data = JSON.stringify(scoreboardJson, null, 2);
@@ -570,7 +691,7 @@ function writeScoreboard() {
             fs.writeFileSync(path.join(textsFolder, "Caster 2 Name.txt"), document.getElementById('cName2').value);
             fs.writeFileSync(path.join(textsFolder, "Caster 2 Bluesky.txt"), document.getElementById('cbsky2').value);
             fs.writeFileSync(path.join(textsFolder, "Caster 2 Twitch.txt"), document.getElementById('cTwitch2').value);
-
+            
             // Copy p1File and p2File to another directory
             const copyFile = (file, defaultFile, filePath) => {
                 let reader = new FileReader();

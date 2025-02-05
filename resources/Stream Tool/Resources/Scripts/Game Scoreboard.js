@@ -10,6 +10,7 @@ let introDelay = .8; //all animations will get this delay when the html loads (u
 let p1ScorePrev, p1wlPrev;
 let p2ScorePrev, p2wlPrev;
 let bestOfPrev;
+let timerTogglePrev;
 
 //
 let p1Pic, p1PicPrev;
@@ -31,6 +32,20 @@ const socialInterval = 12000;
 
 let startup = true;
 
+// Timer things
+
+const timerDisplay = document.getElementById('timer');
+let startTime = 0;
+let elapsedTime = 0;
+let isRunning = false;
+let countedDown = false;
+let stopped = false;
+let timer = null;
+let countdownTimer;
+let remainingTime;
+
+const timerFolder = 'Resources/Texts/Timer Info';
+
 
 window.onload = init;
 
@@ -41,7 +56,8 @@ function init() {
 	}
 
 	mainLoop();
-	setInterval( () => { mainLoop(); }, 500); //update interval
+	setInterval( () => { mainLoop(); readTimerFiles(); }, 500); //update interval
+	
 }
 
 async function getData(scInfo) {
@@ -83,9 +99,12 @@ async function getData(scInfo) {
 	let p1Pic = scInfo['p1Pic'];
 	let p2Pic = scInfo['p2Pic'];
 
+	let timerToggle = scInfo['timerStatus'];
+
 
 	//first, things that will happen only the first time the html loads
 	if (startup) {
+		
 		//update player name and team name texts
 		updatePlayerName('p1Wrapper', 'p1Name', 'p1Team', p1Name, p1Team);
 		//sets the starting position for the player text, then fades in and moves the p1 text to the next keyframe
@@ -112,7 +131,7 @@ async function getData(scInfo) {
 		// updateColor('p1Color', 'p1Name', p1Color);
 		// p1ColorPrev = p1Color;
 
-
+		resizeText(document.getElementById('timerWrapper'));
 		// took notes from player 1? well, this is exactly the same!
 		updatePlayerName('p2Wrapper', 'p2Name', 'p2Team', p2Name, p2Team);
 		gsap.fromTo("#p2Wrapper", 
@@ -131,10 +150,12 @@ async function getData(scInfo) {
 
 		// //set this for later
 		bestOfPrev = bestOf;
+		timerTogglePrev = timerToggle;
+		// TODO make the function that animates the timer background in and out
 
 		updateTournament(tournament);
 		document.getElementById('tournamentName').textContext = tournament;
-		console.log(tournament);
+		// console.log(tournament);
 		// update the round text
 		updateRound(round);
 		//update the best of text
@@ -197,21 +218,23 @@ async function getData(scInfo) {
 			fadeIn("#caster2Icon", .2);
 		}
 
-
-		//check if the team has a logo we can place on the overlay
-		// updateTeamLogo("teamLogoP1", p1Team);
-		// updateTeamLogo("teamLogoP2", p2Team);
-		// //animate them
-		// fadeIn("#teamLogoP1");
-		// fadeIn("#teamLogoP2");
-
-
+		gsap.to("#overlayTimer", {y: -pMove, opacity: 0, ease: "power1.in", duration: fadeOutTime, onComplete: timerMoved});
+			function timerMoved() {
+				//change the thing!
+				//updateTimer(p1WL, 1);
+				//move it back!
+				if (timerToggle != false) {
+					gsap.to("#overlayTimer", {delay: .3, y: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+				} else {
+					gsap.to("#overlayTimer", {y: 0, duration: fadeInTime});
+				}
+			}
 		startup = false; //next time we run this function, it will skip all we just did
 	}
 
 	//now things that will happen constantly
 	else {
-		
+		// resizeText(document.getElementById(timerWrapper));
 		//player 1 time!
 		if (document.getElementById('p1Name').textContent != p1Name ||
 			document.getElementById('p1Team').textContent != p1Team) {
@@ -236,8 +259,20 @@ async function getData(scInfo) {
 			p1PicPrev = p1Pic;
 		}
 		
-
-
+		if(timerTogglePrev != timerToggle){
+			gsap.to("#overlayTimer", {y: -pMove, opacity: 0, ease: "power1.in", duration: fadeOutTime, onComplete: timerMoved});
+			function timerMoved() {
+				//change the thing!
+				//updateTimer(p1WL, 1);
+				//move it back!
+				if (timerToggle != false) {
+					gsap.to("#overlayTimer", {delay: .3, y: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+				} else {
+					gsap.to("#overlayTimer", {y: 0, duration: fadeInTime});
+				}
+			}
+			timerTogglePrev = timerToggle;
+		}
 		//the [W] and [L] status for grand finals
 		if (p1wlPrev != p1WL) {
 			//move it away!
@@ -758,6 +793,11 @@ function moveScoresIntro(pNum, bestOf, pWL, move) {
 
 }
 
+// function moveTimerIntro(){
+// 	if(timerToggle){
+// 		gsap.to("#overlayTimer", {delay: .3, y: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+// 	}
+// }
 
 //check if winning or losing in a GF, then change image
 function updateWL(pWL, playerNum) {
@@ -790,24 +830,6 @@ function getFontSize(textElement) {
 	return (parseFloat(textElement.style.fontSize.slice(0, -2)) * .90) + 'px';
 }
 
-// //color codes here!
-// function getHexColor(color) {
-// 	switch (color) {
-// 		case "Red":
-// 			return "#e54c4c";
-// 		case "Blue":
-// 			return "#4b4ce5";
-// 		case "Yellow":
-// 			return "#ffcb00";
-// 		case "Green":
-// 			return "#00b200";
-// 		case "CPU":
-// 			return "#808080";
-// 		default:
-// 			return "#808080";
-// 	}
-// }
-
 //searches for the main json file
 function getInfo() {
 	return new Promise(function (resolve) {
@@ -824,30 +846,13 @@ function getInfo() {
 	//i would gladly have used fetch, but OBS local files wont support that :(
 }
 
-function saveFile(file, filePath) {
-    // This function should handle saving the file to the specified path
-    // Implementation depends on the environment (Node.js, Electron, etc.)
-    // Example for Node.js:
-    const fs = require('fs');
-    const reader = new FileReader();
-    reader.onload = function() {
-        fs.writeFile(filePath, Buffer.from(new Uint8Array(reader.result)), (err) => {
-            if (err) throw err;
-            console.log('File saved:', filePath);
-        });
-    };
-    reader.readAsArrayBuffer(file);
-}
-
-
-
 async function updatePlayerPic(picID, n) {
     const charEL = document.getElementById(picID);
     let src = 'Resources/Player Icons/p' + n + '.png';
     
     // Log the values of p1Pic and p2Pic
-    console.log('p1Pic:', p1Pic);
-    console.log('p2Pic:', p2Pic);
+    // console.log('p1Pic:', p1Pic);
+    // console.log('p2Pic:', p2Pic);
 
     // Check if p1Pic or p2Pic are null or empty strings and set to black.png if true
     if (p1Pic === "") {
@@ -860,4 +865,101 @@ async function updatePlayerPic(picID, n) {
     }
 
     charEL.setAttribute('src', src);
+}
+
+// read timer files
+async function readTimerFiles() {
+	try {
+		const startTimeResponse = await fetch(timerFolder + '/Start Time.txt');
+		const elapsedTimeResponse = await fetch (timerFolder + '/Elapsed Time.txt');
+		
+		if (!startTimeResponse.ok || !elapsedTimeResponse.ok){
+			throw new Error("Failed to fetch one or more files");
+		}
+
+		const startTimeFromFile = await startTimeResponse.text();
+		const elapsedTimeFromFile = await elapsedTimeResponse.text();
+
+		startTime = parseInt(startTimeFromFile);
+		elapsedTime = parseInt(elapsedTimeFromFile);
+		if(!countedDown && elapsedTime > 0){
+			if (!isRunning){
+				remainingTime = elapsedTime;
+				countdownTimer = setInterval(function() {
+					if (remainingTime > 0) {
+						let seconds = remainingTime % 60;
+						document.getElementById('timer').textContent = `${seconds}`;
+						remainingTime--;
+					} else {
+						clearInterval(countdownTimer); // Stop the countdown
+						document.getElementById('timer').textContent = "GO!";  // Display "GO!"
+						//setTimeout(startTimer, 0);  // Wait 1 second, then start the main timer
+					}
+				}, 1000);
+			}
+			countedDown = true;
+		} else {
+			if(!isRunning && elapsedTime === 0){
+				if(startTime != 0){
+					startTimer();
+				}
+			} else if (isRunning) {
+				if (elapsedTime > 10){
+					stopTimer()
+				}
+				if (startTime === 0) {
+					resetTimer();
+				}
+			}
+		}
+	} catch (error){
+		console.error("error reading file(s)")
+	}
+}
+
+// Start timer
+function startTimer() {
+	console.log('start called');
+    if (!isRunning) {
+        isRunning = true;
+        timer = setInterval(updateTimer, 1000); // Update the timer every second
+    }
+}
+
+// Update timer every second
+function updateTimer() {
+    const currentTime = Date.now();
+    elapsedTime = currentTime - startTime;
+    
+    let hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+    let minutes = Math.floor(elapsedTime / (1000 * 60) % 60);
+    let seconds = Math.floor(elapsedTime / 1000 % 60);
+
+    if(Math.floor(elapsedTime/1000) < 60){
+        document.getElementById('timer').textContent=`${seconds}`;
+    } else if (Math.floor(elapsedTime/(60*1000) < 60)) {
+        seconds = String(seconds).padStart(2, "0");
+        document.getElementById('timer').textContent=`${minutes}:${seconds}`;
+    } else {
+        minutes = String(minutes).padStart(2, "0");
+        document.getElementById('timer').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+}
+
+// stop timer
+function stopTimer() {
+	console.log('stop called');
+    if (isRunning) {
+        clearInterval(timer);
+        isRunning = false;
+    }
+}
+
+// reset timer
+function resetTimer(){
+	console.log('reset called');
+	clearInterval(timer);
+	isRunning = false;
+	countedDown = false;
+	document.getElementById('timer').textContent = '0';
 }

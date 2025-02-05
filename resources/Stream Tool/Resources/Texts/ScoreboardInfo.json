@@ -17,5 +17,6 @@
   "caster1Twitch": "",
   "caster2Name": "",
   "caster2Bluesky": "",
-  "caster2Twitch": ""
+  "caster2Twitch": "",
+  "timerStatus": true
 }
