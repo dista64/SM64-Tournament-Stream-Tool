@@ -1,7 +1,7 @@
 {
   "name": "ttt-tool",
   "productName": "SM64 Tournament Stream Tool",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "App to control stream overlay for sm64 tournaments",
   "repository": "https://github.com/dista64/SM64-Tournament-Stream-Tool",
   "main": "main.js",
