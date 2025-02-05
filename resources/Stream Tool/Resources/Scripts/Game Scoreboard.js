@@ -32,6 +32,20 @@ const socialInterval = 12000;
 
 let startup = true;
 
+// Timer things
+
+const timerDisplay = document.getElementById('timer');
+let startTime = 0;
+let elapsedTime = 0;
+let isRunning = false;
+let countedDown = false;
+let stopped = false;
+let timer = null;
+let countdownTimer;
+let remainingTime;
+
+const timerFolder = 'Resources/Texts/Timer Info';
+
 
 window.onload = init;
 
@@ -42,7 +56,8 @@ function init() {
 	}
 
 	mainLoop();
-	setInterval( () => { mainLoop(); }, 500); //update interval
+	setInterval( () => { mainLoop(); readTimerFiles(); }, 500); //update interval
+	
 }
 
 async function getData(scInfo) {
@@ -89,6 +104,7 @@ async function getData(scInfo) {
 
 	//first, things that will happen only the first time the html loads
 	if (startup) {
+		
 		//update player name and team name texts
 		updatePlayerName('p1Wrapper', 'p1Name', 'p1Team', p1Name, p1Team);
 		//sets the starting position for the player text, then fades in and moves the p1 text to the next keyframe
@@ -139,7 +155,7 @@ async function getData(scInfo) {
 
 		updateTournament(tournament);
 		document.getElementById('tournamentName').textContext = tournament;
-		console.log(tournament);
+		// console.log(tournament);
 		// update the round text
 		updateRound(round);
 		//update the best of text
@@ -796,13 +812,6 @@ function updateWL(pWL, playerNum) {
 	})}
 }
 
-function updateTimer(timer){
-	const timerEL = document.getElementById("timer");
-	if (timer == true){
-		timerEL.setAttribute
-	}
-}
-
 //text resize, keeps making the text smaller until it fits
 function resizeText(textEL) {
 	const childrens = textEL.children;
@@ -821,24 +830,6 @@ function getFontSize(textElement) {
 	return (parseFloat(textElement.style.fontSize.slice(0, -2)) * .90) + 'px';
 }
 
-// //color codes here!
-// function getHexColor(color) {
-// 	switch (color) {
-// 		case "Red":
-// 			return "#e54c4c";
-// 		case "Blue":
-// 			return "#4b4ce5";
-// 		case "Yellow":
-// 			return "#ffcb00";
-// 		case "Green":
-// 			return "#00b200";
-// 		case "CPU":
-// 			return "#808080";
-// 		default:
-// 			return "#808080";
-// 	}
-// }
-
 //searches for the main json file
 function getInfo() {
 	return new Promise(function (resolve) {
@@ -855,30 +846,13 @@ function getInfo() {
 	//i would gladly have used fetch, but OBS local files wont support that :(
 }
 
-function saveFile(file, filePath) {
-    // This function should handle saving the file to the specified path
-    // Implementation depends on the environment (Node.js, Electron, etc.)
-    // Example for Node.js:
-    const fs = require('fs');
-    const reader = new FileReader();
-    reader.onload = function() {
-        fs.writeFile(filePath, Buffer.from(new Uint8Array(reader.result)), (err) => {
-            if (err) throw err;
-            console.log('File saved:', filePath);
-        });
-    };
-    reader.readAsArrayBuffer(file);
-}
-
-
-
 async function updatePlayerPic(picID, n) {
     const charEL = document.getElementById(picID);
     let src = 'Resources/Player Icons/p' + n + '.png';
     
     // Log the values of p1Pic and p2Pic
-    console.log('p1Pic:', p1Pic);
-    console.log('p2Pic:', p2Pic);
+    // console.log('p1Pic:', p1Pic);
+    // console.log('p2Pic:', p2Pic);
 
     // Check if p1Pic or p2Pic are null or empty strings and set to black.png if true
     if (p1Pic === "") {
@@ -891,4 +865,101 @@ async function updatePlayerPic(picID, n) {
     }
 
     charEL.setAttribute('src', src);
+}
+
+// read timer files
+async function readTimerFiles() {
+	try {
+		const startTimeResponse = await fetch(timerFolder + '/Start Time.txt');
+		const elapsedTimeResponse = await fetch (timerFolder + '/Elapsed Time.txt');
+		
+		if (!startTimeResponse.ok || !elapsedTimeResponse.ok){
+			throw new Error("Failed to fetch one or more files");
+		}
+
+		const startTimeFromFile = await startTimeResponse.text();
+		const elapsedTimeFromFile = await elapsedTimeResponse.text();
+
+		startTime = parseInt(startTimeFromFile);
+		elapsedTime = parseInt(elapsedTimeFromFile);
+		if(!countedDown && elapsedTime > 0){
+			if (!isRunning){
+				remainingTime = elapsedTime;
+				countdownTimer = setInterval(function() {
+					if (remainingTime > 0) {
+						let seconds = remainingTime % 60;
+						document.getElementById('timer').textContent = `${seconds}`;
+						remainingTime--;
+					} else {
+						clearInterval(countdownTimer); // Stop the countdown
+						document.getElementById('timer').textContent = "GO!";  // Display "GO!"
+						//setTimeout(startTimer, 0);  // Wait 1 second, then start the main timer
+					}
+				}, 1000);
+			}
+			countedDown = true;
+		} else {
+			if(!isRunning && elapsedTime === 0){
+				if(startTime != 0){
+					startTimer();
+				}
+			} else if (isRunning) {
+				if (elapsedTime > 10){
+					stopTimer()
+				}
+				if (startTime === 0) {
+					resetTimer();
+				}
+			}
+		}
+	} catch (error){
+		console.error("error reading file(s)")
+	}
+}
+
+// Start timer
+function startTimer() {
+	console.log('start called');
+    if (!isRunning) {
+        isRunning = true;
+        timer = setInterval(updateTimer, 1000); // Update the timer every second
+    }
+}
+
+// Update timer every second
+function updateTimer() {
+    const currentTime = Date.now();
+    elapsedTime = currentTime - startTime;
+    
+    let hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+    let minutes = Math.floor(elapsedTime / (1000 * 60) % 60);
+    let seconds = Math.floor(elapsedTime / 1000 % 60);
+
+    if(Math.floor(elapsedTime/1000) < 60){
+        document.getElementById('timer').textContent=`${seconds}`;
+    } else if (Math.floor(elapsedTime/(60*1000) < 60)) {
+        seconds = String(seconds).padStart(2, "0");
+        document.getElementById('timer').textContent=`${minutes}:${seconds}`;
+    } else {
+        minutes = String(minutes).padStart(2, "0");
+        document.getElementById('timer').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+}
+
+// stop timer
+function stopTimer() {
+	console.log('stop called');
+    if (isRunning) {
+        clearInterval(timer);
+        isRunning = false;
+    }
+}
+
+// reset timer
+function resetTimer(){
+	console.log('reset called');
+	clearInterval(timer);
+	isRunning = false;
+	countedDown = false;
+	document.getElementById('timer').textContent = '0';
 }

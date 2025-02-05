@@ -61,6 +61,10 @@ let countedDown = false;
 const timerCheckBox = document.getElementById("timerCheck");
 let timerOn = false;
 
+let streamToolDirectory = './resources/Stream Tool/Resources';
+let timerFolder = `${streamToolDirectory}/Texts/Timer Info`;
+let textsFolder = `${streamToolDirectory}/Texts/Simple Texts`;
+
 function init() {
     checkRound();
     // Listener for update button
@@ -121,6 +125,9 @@ function init() {
     document.getElementById("resetTimerDiv").addEventListener("click", resetTimer);
 
     timerCheckBox.addEventListener("click",toggleTimer);
+
+    fs.writeFileSync(path.join(timerFolder, "Start Time.txt"), '0');
+    fs.writeFileSync(path.join(timerFolder, "Elapsed Time.txt"), '0');
 }
 
 let countdownTimer;
@@ -128,14 +135,23 @@ let remainingTime;
 
 function toggleTimer() {
     if(timerCheckBox.checked == false){
+        document.getElementById('countDownLength').disabled = true;
+        document.getElementById('startTimerDiv').disabled = true;
+        document.getElementById('stopTimerDiv').disabled = true;
+        document.getElementById('resetTimerDiv').disabled = true;
         timerOn = false;
     } else{
+        document.getElementById('countDownLength').disabled = false;
+        document.getElementById('startTimerDiv').disabled = false;
+        document.getElementById('stopTimerDiv').disabled = false;
+        document.getElementById('resetTimerDiv').disabled = false;
         timerOn = true;
     }
 }
 
 function startCountDown() {
-    if(!countedDown){
+    if(!countedDown && countDown.value != 0){
+        fs.writeFileSync(path.join(timerFolder, "Elapsed Time.txt"), String(countDown.value));
         if (!isRunning) {
             if (remainingTime === undefined) {
                 remainingTime = countDown.value; // Initialize remaining time only once
@@ -146,14 +162,10 @@ function startCountDown() {
                     // let minutes = Math.floor(remainingTime / 60);
                     let seconds = remainingTime % 60;
                     display.textContent = `${seconds}`;
-                    localStorage.setItem('timerValue', display.textContent);
-                    electron.sendTimerUpdate(display.textContent);
                     remainingTime--;
                 } else {
                     clearInterval(countdownTimer); // Stop the countdown
                     display.textContent = "GO!";  // Display "GO!"
-                    localStorage.setItem('timerValue', display.textContent);
-                    electron.sendTimerUpdate(display.textContent);
                     setTimeout(startTimer, 0);  // Wait 1 second, then start the main timer
                 }
             }, 1000);
@@ -167,6 +179,8 @@ function startCountDown() {
 function startTimer() {
     if (!isRunning) {
         startTime = Date.now() - elapsedTime;
+        fs.writeFileSync(path.join(timerFolder, "Start Time.txt"), String(startTime));
+        fs.writeFileSync(path.join(timerFolder, "Elapsed Time.txt"), '0');
         timer = setInterval(updateTimer, 1000);
         isRunning = true;
     }
@@ -176,6 +190,7 @@ function stopTimer() {
     if (isRunning) {
         clearInterval(timer);
         elapsedTime = Date.now() - startTime;
+        fs.writeFileSync(path.join(timerFolder, "Elapsed Time.txt"), String(elapsedTime));
         isRunning = false;
     }
 }
@@ -185,12 +200,12 @@ function resetTimer() {
     clearInterval(countdownTimer); // Clear countdown timer as well
     startTime = 0;
     elapsedTime = 0;
+    fs.writeFileSync(path.join(timerFolder, "Start Time.txt"), String(startTime));
+    fs.writeFileSync(path.join(timerFolder, "Elapsed Time.txt"), String(elapsedTime));
     remainingTime = undefined; // Reset the remaining time when reset
     isRunning = false;
     countedDown = false;
-    display.textContent = "00:00:00";
-    localStorage.setItem('timerValue', display.textContent);
-    electron.sendTimerUpdate(display.textContent);
+    display.textContent = "0";
 }
 
 function updateTimer(){
@@ -199,10 +214,6 @@ function updateTimer(){
     let hours = Math.floor(elapsedTime / (1000 * 60 * 60));
     let minutes = Math.floor(elapsedTime / (1000 * 60) % 60);
     let seconds = Math.floor(elapsedTime/1000 % 60);
-
-    // hours = String(hours).padStart(2, "0");
-    // minutes = String(minutes).padStart(2, "0");
-    // seconds = String(seconds).padStart(2, "0");
 
     if(Math.floor(elapsedTime/1000) < 60){
         display.textContent=`${seconds}`;
@@ -213,8 +224,6 @@ function updateTimer(){
         minutes = String(minutes).padStart(2, "0");
         display.textContent = `${hours}:${minutes}:${seconds}`;
     }
-    localStorage.setItem('timerValue', display.textContent);
-    electron.sendTimerUpdate(display.textContent);
 }
 
 function showImage1() {
@@ -632,8 +641,7 @@ function setScore(score, tick1, tick2, tick3) {
 function writeScoreboard() {
     let p1File = document.getElementById('file1').files[0];
     let p2File = document.getElementById('file2').files[0];
-    let streamToolDirectory = './resources/Stream Tool/Resources';
-    let textsFolder = `${streamToolDirectory}/Texts/Simple Texts`
+    
     console.log(timerOn)
     fetch('../resources/Stream Tool/Resources/Player Icons/black.png')
         .then(response => response.blob())
