@@ -903,6 +903,9 @@ async function readTimerFiles() {
 				if(startTime != 0){
 					startTimer();
 				}
+				if (startTime === 0 && elapsedTime === 0) {
+					resetTimer();
+				}
 			} else if (isRunning) {
 				if (elapsedTime > 10){
 					stopTimer()
