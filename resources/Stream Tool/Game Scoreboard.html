@@ -85,6 +85,11 @@
                 opacity: 0;
                 color: black;
             }
+            #timerWrapper{
+                opacity: 1;
+                top: 0px;
+                width: 218px;
+            }
 
             .context {
                 width: 100%;
@@ -146,6 +151,10 @@
             #wlP2 {
                 right: 140px;
                 top: 811px;
+            }
+            #overlayTimer {
+                right: 1069px;
+                top: 722px;
             }
             #overlayTournament{
                 font-family: "SUPERMARIO64SIGNFONT-Bold";
@@ -483,6 +492,13 @@
                 font-family: "SUPERMARIO64SIGNFONT-Bold";
                 font-size: 16px;
             }
+
+            .timer {
+                position: relative;
+                color: black;
+                font-family: "SUPERMARIO64SIGNFONT-Bold";
+                font-size: 40px
+            }
       
             @keyframes animate {
     
@@ -681,6 +697,13 @@
     
             </div>
         </div>
+
+        <div id="overlayTimer" class="scoreTick">
+            <img src="Resources/Overlay/Timer BG.png" class="absol">
+            <span id="timerWrapper" class="wrappers">
+                <span id="timer" class="timer">0</span>
+            </span>
+        </div>    
 
         <script src="Resources/Scripts/Background.js"></script>
     </body>
