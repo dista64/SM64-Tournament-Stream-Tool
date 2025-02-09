@@ -944,7 +944,8 @@ function updateTimer() {
         seconds = String(seconds).padStart(2, "0");
         document.getElementById('timer').textContent=`${minutes}:${seconds}`;
     } else {
-        minutes = String(minutes).padStart(2, "0");
+        seconds = String(seconds).padStart(2, "0");
+		minutes = String(minutes).padStart(2, "0");
         document.getElementById('timer').textContent = `${hours}:${minutes}:${seconds}`;
     }
 }

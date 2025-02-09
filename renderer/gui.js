@@ -221,6 +221,7 @@ function updateTimer(){
         seconds = String(seconds).padStart(2, "0");
         display.textContent=`${minutes}:${seconds}`;
     } else {
+        seconds = String(seconds).padStart(2, "0");
         minutes = String(minutes).padStart(2, "0");
         display.textContent = `${hours}:${minutes}:${seconds}`;
     }
