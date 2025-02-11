@@ -12,6 +12,8 @@ let currentP1WL = "Nada";
 let currentP2WL = "Nada";
 let currentBestOf = "Bo5";
 
+let movedSettings = false;
+
 const wlButtons1 = document.getElementById("wlButtons1");
 const wlButtons2 = document.getElementById('wlButtons2');
 
@@ -69,9 +71,12 @@ function init() {
     checkRound();
     // Listener for update button
     document.getElementById('updateRegion').addEventListener("click", writeScoreboard);
+    document.getElementById('settingsRegion').addEventListener("click", moveViewport);
+
+    document.getElementById('goBack').addEventListener("click", goBack);
 
     // Move viewport to the center to avoid animation bugs
-    viewport.style.right = "100%";
+    viewport.style.right = "0%";
 
     p1PFP.addEventListener("change", showImage1);
     p2PFP.addEventListener("change", showImage2);
@@ -296,7 +301,7 @@ function removeImage2() {
 
 function moveViewport() {
     if (!movedSettings) {
-        viewport.style.right = "140%";
+        viewport.style.right = "40%";
         document.getElementById('overlay').style.opacity = "25%";
         document.getElementById('goBack').style.display = "block"
         movedSettings = true;
@@ -304,7 +309,7 @@ function moveViewport() {
 }
 
 function goBack() {
-    viewport.style.right = "100%";
+    viewport.style.right = "0%";
     document.getElementById('overlay').style.opacity = "100%";
     document.getElementById('goBack').style.display = "none";
     movedSettings = false;

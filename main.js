@@ -11,12 +11,12 @@ function createMainWindow() {
     mainWindow = new BrowserWindow({
         title: 'TTT Tool',
         width: 584,
-        height: 376,
+        height: 378,
 
         minWidth: 584,
-        minHeight: 376,
-        maxWidth: 584,
-        maxHeight: 376,
+        minHeight: 378,
+        // maxWidth: 584,
+        // maxHeight: 378,
 
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
@@ -27,35 +27,35 @@ function createMainWindow() {
     mainWindow.removeMenu();
     mainWindow.loadFile(path.join(__dirname, './renderer/index.html'));
 
-    // const debugWindow = new BrowserWindow({
-    //     title: 'debug',
-    //     width: isDev ? 1200 : 600,
-    //     height: 340,
+    const debugWindow = new BrowserWindow({
+        title: 'debug',
+        width: isDev ? 1200 : 600,
+        height: 340,
 
-    //     // minWidth: 590,
-    //     // minHeight: 340,
-    //     // maxWidth: 590,
-    //     // maxHeight: 340,
+        // minWidth: 590,
+        // minHeight: 340,
+        // maxWidth: 590,
+        // maxHeight: 340,
 
-    //     webPreferences: {
-    //         preload: path.join(__dirname, 'preload.js'),
-    //         nodeIntegration: true,
-    //     }
-    // });
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+            nodeIntegration: true,
+        }
+    });
 
     // Open devtools if in dev env
     if (isDev){
-        //mainWindow.webContents.openDevTools();
-        //debugWindow.webContents.openDevTools();
+        // mainWindow.webContents.openDevTools();
+        debugWindow.webContents.openDevTools();
     }
 
-    //debugWindow.removeMenu();
+    debugWindow.removeMenu();
 
     // Swap comments of mainwindow loads to switch between the html files
     // this html file wont load properly in your web browser so it's better
     // to test it in the electron app if you need to look at the console
 
-    //debugWindow.loadFile(path.join('resources', 'Stream Tool', 'Game Scoreboard.html'));
+    debugWindow.loadFile(path.join('resources', 'Stream Tool', 'Game Scoreboard.html'));
 }
 
 // App is ready
