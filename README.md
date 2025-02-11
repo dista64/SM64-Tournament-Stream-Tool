@@ -1,5 +1,5 @@
 **Setup Guide**
-1. Download [this](https://github.com/dista64/SM64-Tournament-Stream-Tool/releases/tag/SM64).
+1. Download [this](https://github.com/dista64/SM64-Tournament-Stream-Tool/releases/tag/Timer).
 2. Extract 'SM64 Tournament Stream Tool.zip'.
 3. Open the following folders: 'SM64 Tournament Stream Tool\resources\Stream Tool' and you should see 'Game Scoreboard.html'. ![image](https://github.com/user-attachments/assets/7b4500de-fb1d-42d0-8100-9adcd7df11b6)
 4. Click and drag 'Game Scoreboard.html' into your sources on OBS. ![2025-01-1116-39-37-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/1545bdd3-8e01-4d29-9346-d2d5a5332ab0)
@@ -8,6 +8,10 @@
    
   ![image](https://github.com/user-attachments/assets/3bba1f1f-0706-45b0-b8df-dfbc6faac0d2) ![Screenshot 2025-02-05 15-01-19](https://github.com/user-attachments/assets/4e5bc912-f388-4172-912d-c44b8faf0b68)
 
+Planned Features:
+- Customization options such as but not limited to: background color, background animation presets, ability to import custom elements to be used in background animation (like the stage icons packaged with app), font...
+- Stage Striking functions/visualizer for Tangerine Tango style events
+- therungg integration (live comparison and showing which runner is ahead and by how much)
 
 Big thanks to RONC3NA, EgregiousDI, and fmx, who have helped in countless ways over the development of this project.
 
