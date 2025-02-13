@@ -13,6 +13,21 @@
   --bg5: #2b2b2b;
   --selected: #2ba4eb;
   --focused: #686868;
+  --bob: #2a462c;
+  --wf: #585151;
+  --jrb: #363b64;
+  --ccm: #557985;
+  --bbh: #270808;
+  --hmc: #212538;
+  --lll: #581c1c;
+  --ssl: #b15724;
+  --ddd: #322e64;
+  --sl: #314649;
+  --wdw: #483f4e;
+  --thi: #2b5838;
+  --ttm: #441414;
+  --ttc: #572300;
+  --rr: #421244;
 }
 
 body {
@@ -486,6 +501,12 @@ input[type='file'] {
   background-color: var(--bg5);
 }
 
+#stageStrikeRegion{
+  width: 32px;
+  background-color: var(--bg3);
+  display: none;
+}
+
 #settingsRegion {
   width: 32px;
   background-color: var(--bg3);
@@ -494,6 +515,10 @@ input[type='file'] {
 #configIcon {
   width: 20px;
   height: 20px;
+}
+
+#stageStrikingIcon {
+  margin-bottom: 3px;
 }
 
 #configIcon path {
@@ -508,6 +533,180 @@ input[type='file'] {
   background-color: var(--bg5);
 }
 
+#stageStrikeRegion:hover {
+  background-color: var(--bg1);
+}
+
+#stageStrikeRegion:active{
+  background-color: var(--bg5);
+}
+
+/* stage striking section*/
+
+#stageStriker {
+  margin-left: -234px;
+  width: 234px;
+  height: 378px;
+  background-color: var(--bg5);
+  z-index: 2;
+}
+
+#stageStrikerTitle {
+  display: grid;
+  grid-template: repeat(4, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: auto;
+}
+
+#actualStageStriker {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  width: 60%;
+  height: auto;
+  margin: auto;
+  padding: 10px;
+}
+
+
+.stageButton {
+  background: none;
+  border: 2px solid;
+  /* border-color: var(--bg4); */
+  line-height: 1;
+  padding: 0;
+  width: 45px;
+  height: 45px;
+}
+
+.stageButton img {
+  display: block;
+  width: 100%;
+}
+
+#bob{
+  border-color: var(--bob);
+}
+
+#bob:hover{
+  border-color: var(--selected);
+}
+
+#wf{
+  border-color: var(--wf);
+}
+
+#wf:hover{
+  border-color: var(--selected);
+}
+
+#jrb{
+  border-color: var(--jrb);
+}
+
+#jrb:hover{
+  border-color: var(--selected);
+}
+
+#ccm{
+  border-color: var(--ccm);
+}
+
+#ccm:hover{
+  border-color: var(--selected);
+}
+
+#bbh{
+  border-color: var(--bbh);
+}
+
+#bbh:hover{
+  border-color: var(--selected);
+}
+
+#hmc{
+  border-color: var(--hmc);
+}
+
+#hmc:hover{
+  border-color: var(--selected);
+}
+
+#lll{
+  border-color: var(--lll);
+}
+
+#lll:hover{
+  border-color: var(--selected);
+}
+
+#ssl{
+  border-color: var(--ssl);
+}
+
+#ssl:hover{
+  border-color: var(--selected);
+}
+
+#ddd{
+  border-color: var(--ddd);
+}
+
+#ddd:hover{
+  border-color: var(--selected);
+}
+
+#sl{
+  border-color: var(--sl);
+}
+
+#sl:hover{
+  border-color: var(--selected);
+}
+
+#wdw{
+  border-color: var(--wdw);
+}
+
+#wdw:hover{
+  border-color: var(--selected);
+}
+
+#thi{
+  border-color: var(--thi);
+}
+
+#thi:hover{
+  border-color: var(--selected);
+}
+
+#ttm{
+  border-color: var(--ttm);
+}
+
+#ttm:hover{
+  border-color: var(--selected);
+}
+
+#ttc{
+  border-color: var(--ttc);
+}
+
+#ttc:hover{
+  border-color: var(--selected);
+}
+
+#rr{
+  border-color: var(--rr);
+}
+
+#rr:hover{
+  border-color: var(--selected);
+}
+
 /* settings section */
 #settings {
   width: calc(100% / 3);
@@ -518,6 +717,16 @@ input[type='file'] {
 
 #settingsTitle {
   width: 40%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "SUPERMARIO64SIGNFONT";
+  border-bottom-style: solid;
+  border-color: var(--bg4);
+}
+
+#stageStrikingTitle {
   height: 40px;
   display: flex;
   align-items: center;
@@ -613,4 +822,8 @@ input[type='file'] {
 
 .image-preview__default-text{
   display: block;
+}
+
+#miscStageStrikingControls{
+  justify-items: center;
 }

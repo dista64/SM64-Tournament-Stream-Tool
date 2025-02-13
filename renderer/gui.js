@@ -13,6 +13,7 @@ let currentP2WL = "Nada";
 let currentBestOf = "Bo5";
 
 let movedSettings = false;
+let movedStageStriker = false;
 
 const wlButtons1 = document.getElementById("wlButtons1");
 const wlButtons2 = document.getElementById('wlButtons2');
@@ -60,6 +61,8 @@ let elapsedTime = 0;
 let isRunning = false;
 let countedDown = false;
 
+const forceWL = document.getElementById('forceWLToggle');
+const stageStrikeCheckBox = document.getElementById('stageStrikeToggle');
 const timerCheckBox = document.getElementById("timerCheck");
 let timerOn = false;
 
@@ -67,11 +70,45 @@ let streamToolDirectory = './resources/Stream Tool/Resources';
 let timerFolder = `${streamToolDirectory}/Texts/Timer Info`;
 let textsFolder = `${streamToolDirectory}/Texts/Simple Texts`;
 
+// Stage Striking Buttons
+const bob = document.getElementById('bob');
+const wf = document.getElementById('wf');
+const jrb = document.getElementById('jrb');
+const ccm = document.getElementById('ccm');
+const bbh = document.getElementById('bbh');
+const hmc = document.getElementById('hmc');
+const lll = document.getElementById('lll');
+const ssl = document.getElementById('ssl');
+const ddd = document.getElementById('ddd');
+const sl = document.getElementById('sl');
+const wdw = document.getElementById('wdw');
+const thi = document.getElementById('thi');
+const ttm = document.getElementById('ttm');
+const ttc = document.getElementById('ttc');
+const rr = document.getElementById('rr');
+
+let bobToggle = true;
+let wfToggle = true;
+let jrbToggle = true;
+let ccmToggle = true;
+let bbhToggle = true;
+let hmcToggle = true;
+let lllToggle = true;
+let sslToggle = true;
+let dddToggle = true;
+let slToggle = true;
+let wdwToggle = true;
+let thiToggle = true;
+let ttmToggle = true;
+let ttcToggle = true;
+let rrToggle = true;
+
 function init() {
     checkRound();
     // Listener for update button
     document.getElementById('updateRegion').addEventListener("click", writeScoreboard);
-    document.getElementById('settingsRegion').addEventListener("click", moveViewport);
+    document.getElementById('settingsRegion').addEventListener("click", moveViewportSettings);
+    document.getElementById('stageStrikeRegion').addEventListener("click", moveViewportStageStriker);
 
     document.getElementById('goBack').addEventListener("click", goBack);
 
@@ -131,12 +168,37 @@ function init() {
 
     timerCheckBox.addEventListener("click",toggleTimer);
 
+    forceWL.addEventListener("click", forceWLtoggles);
+    stageStrikeCheckBox.addEventListener("click", toggleStageStrikingMenu);
+
     fs.writeFileSync(path.join(timerFolder, "Start Time.txt"), '0');
     fs.writeFileSync(path.join(timerFolder, "Elapsed Time.txt"), '0');
+
+    // Stage Striking stuff
+    // bob.addEventListener("click", function(){
+    //     if(bobToggle){
+    //         bob.style.borderColor = "var(--bg2)";
+    //         // img.style.filter = "grayscale(100%)";
+    //         bobToggle = false;
+    //     } else{
+    //         bob.style.borderColor = "var(--bob)";
+    //         // img.style.filter = "grayscale(0%)";
+    //         bobToggle = true;
+    //     }
+    // });
+
 }
 
 let countdownTimer;
 let remainingTime;
+
+function toggleStageStrikingMenu(){
+    if(stageStrikeCheckBox.checked == false){
+        document.getElementById('stageStrikeRegion').style.display = "none";
+    } else{
+        document.getElementById('stageStrikeRegion').style.display = "flex";
+    }
+}
 
 function toggleTimer() {
     if(timerCheckBox.checked == false){
@@ -299,7 +361,7 @@ function removeImage2() {
     previewDefaultText2.style.display = "block";
 }
 
-function moveViewport() {
+function moveViewportSettings() {
     if (!movedSettings) {
         viewport.style.right = "40%";
         document.getElementById('overlay').style.opacity = "25%";
@@ -312,7 +374,19 @@ function goBack() {
     viewport.style.right = "0%";
     document.getElementById('overlay').style.opacity = "100%";
     document.getElementById('goBack').style.display = "none";
+    document.getElementById('goBack').style.left = "179px";
     movedSettings = false;
+    movedStageStriker = false;
+}
+
+function moveViewportStageStriker() {
+    if (!movedStageStriker) {
+        viewport.style.right = "-40%";
+        document.getElementById('goBack').style.left = "0px";
+        document.getElementById('overlay').style.opacity = "25%";
+        document.getElementById('goBack').style.display = "block";
+        movedStageStriker = true;
+    }
 }
 
 //whenever clicking on the first score tick
@@ -430,6 +504,20 @@ function deactivateWL() {
     }
 }
 
+function forceWLtoggles() {
+    const wlButtons = document.getElementsByClassName("wlButtons");
+
+        if (forceWL.checked) {
+            for (let i = 0; i < wlButtons.length; i++) {
+                wlButtons[i].style.display = "inline";
+            }
+        } else {
+            for (let i = 0; i < wlButtons.length; i++) {
+                wlButtons[i].style.display = "none";
+                deactivateWL();
+            }
+        }
+}
 
 //same code as above but just for the player tag
 function resizeInput() {
