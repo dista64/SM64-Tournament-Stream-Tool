@@ -61,6 +61,9 @@ let elapsedTime = 0;
 let isRunning = false;
 let countedDown = false;
 
+let countdownTimer;
+let remainingTime;
+
 const forceWL = document.getElementById('forceWLToggle');
 const stageStrikeCheckBox = document.getElementById('stageStrikeToggle');
 const timerCheckBox = document.getElementById("timerCheck");
@@ -87,24 +90,25 @@ const ttm = document.getElementById('ttm');
 const ttc = document.getElementById('ttc');
 const rr = document.getElementById('rr');
 
-let bobToggle = true;
-let wfToggle = true;
-let jrbToggle = true;
-let ccmToggle = true;
-let bbhToggle = true;
-let hmcToggle = true;
-let lllToggle = true;
-let sslToggle = true;
-let dddToggle = true;
-let slToggle = true;
-let wdwToggle = true;
-let thiToggle = true;
-let ttmToggle = true;
-let ttcToggle = true;
-let rrToggle = true;
+let bobToggle = false;
+let wfToggle = false;
+let jrbToggle = false;
+let ccmToggle = false;
+let bbhToggle = false;
+let hmcToggle = false;
+let lllToggle = false;
+let sslToggle = false;
+let dddToggle = false;
+let slToggle = false;
+let wdwToggle = false;
+let thiToggle = false;
+let ttmToggle = false;
+let ttcToggle = false;
+let rrToggle = false;
 
 function init() {
     checkRound();
+    writeStageStrikingVisualizer();
     // Listener for update button
     document.getElementById('updateRegion').addEventListener("click", writeScoreboard);
     document.getElementById('settingsRegion').addEventListener("click", moveViewportSettings);
@@ -175,22 +179,183 @@ function init() {
     fs.writeFileSync(path.join(timerFolder, "Elapsed Time.txt"), '0');
 
     // Stage Striking stuff
-    // bob.addEventListener("click", function(){
-    //     if(bobToggle){
-    //         bob.style.borderColor = "var(--bg2)";
-    //         // img.style.filter = "grayscale(100%)";
-    //         bobToggle = false;
-    //     } else{
-    //         bob.style.borderColor = "var(--bob)";
-    //         // img.style.filter = "grayscale(0%)";
-    //         bobToggle = true;
-    //     }
-    // });
 
+    bob.addEventListener("click", function(){
+        if(!bobToggle){
+            bob.querySelector('img').classList.add('grayscale');
+        } else{
+            bob.querySelector('img').classList.remove('grayscale');
+        }
+        bobToggle = !bobToggle;
+        writeStageStrikingVisualizer();
+    });
+
+    wf.addEventListener("click", function(){
+        if(!wfToggle){
+            wf.querySelector('img').classList.add('grayscale');
+        } else{
+            wf.querySelector('img').classList.remove('grayscale');
+        }
+        wfToggle = !wfToggle;
+        writeStageStrikingVisualizer();
+    });
+
+    jrb.addEventListener("click", function(){
+        if(!jrbToggle){
+            jrb.querySelector('img').classList.add('grayscale');
+        } else{
+            jrb.querySelector('img').classList.remove('grayscale');
+        }
+        jrbToggle = !jrbToggle;
+        writeStageStrikingVisualizer();
+    });
+
+    ccm.addEventListener("click", function(){
+        if(!ccmToggle){
+            ccm.querySelector('img').classList.add('grayscale');
+        } else{
+            ccm.querySelector('img').classList.remove('grayscale');
+        }
+        ccmToggle = !ccmToggle;
+        writeStageStrikingVisualizer();
+    });
+
+    bbh.addEventListener("click", function(){
+        if(!bbhToggle){
+            bbh.querySelector('img').classList.add('grayscale');
+        } else{
+            bbh.querySelector('img').classList.remove('grayscale');
+        }
+        bbhToggle = !bbhToggle;
+        writeStageStrikingVisualizer();
+    });
+
+    hmc.addEventListener("click", function(){
+        if(!hmcToggle){
+            hmc.querySelector('img').classList.add('grayscale');
+        } else{
+            hmc.querySelector('img').classList.remove('grayscale');
+        }
+        hmcToggle = !hmcToggle;
+        writeStageStrikingVisualizer();
+    });
+
+    lll.addEventListener("click", function(){
+        if(!lllToggle){
+            lll.querySelector('img').classList.add('grayscale');
+        } else{
+            lll.querySelector('img').classList.remove('grayscale');
+        }
+        lllToggle = !lllToggle;
+        writeStageStrikingVisualizer();
+    });
+
+    ssl.addEventListener("click", function(){
+        if(!sslToggle){
+            ssl.querySelector('img').classList.add('grayscale');
+        } else{
+            ssl.querySelector('img').classList.remove('grayscale');
+        }
+        sslToggle = !sslToggle;
+        writeStageStrikingVisualizer();
+    });
+
+    ddd.addEventListener("click", function(){
+        if(!dddToggle){
+            ddd.querySelector('img').classList.add('grayscale');
+        } else{
+            ddd.querySelector('img').classList.remove('grayscale');
+        }
+        dddToggle = !dddToggle;
+        writeStageStrikingVisualizer();
+    });
+
+    sl.addEventListener("click", function(){
+        if(!slToggle){
+            sl.querySelector('img').classList.add('grayscale');
+        } else{
+            sl.querySelector('img').classList.remove('grayscale');
+        }
+        slToggle = !slToggle;
+        writeStageStrikingVisualizer();
+    });
+
+    wdw.addEventListener("click", function(){
+        if(!wdwToggle){
+            wdw.querySelector('img').classList.add('grayscale');
+        } else{
+            wdw.querySelector('img').classList.remove('grayscale');
+        }
+        wdwToggle = !wdwToggle;
+        writeStageStrikingVisualizer();
+    });
+
+    thi.addEventListener("click", function(){
+        if(!thiToggle){
+            thi.querySelector('img').classList.add('grayscale');
+        } else{
+            thi.querySelector('img').classList.remove('grayscale');
+        }
+        thiToggle = !thiToggle;
+        writeStageStrikingVisualizer();
+    });
+
+    ttm.addEventListener("click", function(){
+        if(!ttmToggle){
+            ttm.querySelector('img').classList.add('grayscale');
+        } else{
+            ttm.querySelector('img').classList.remove('grayscale');
+        }
+        ttmToggle = !ttmToggle;
+        writeStageStrikingVisualizer();
+    });
+
+    ttc.addEventListener("click", function(){
+        if(!ttcToggle){
+            ttc.querySelector('img').classList.add('grayscale');
+        } else{
+            ttc.querySelector('img').classList.remove('grayscale');
+        }
+        ttcToggle = !ttcToggle;
+        writeStageStrikingVisualizer();
+    });
+
+    rr.addEventListener("click", function(){
+        if(!rrToggle){
+            rr.querySelector('img').classList.add('grayscale');
+        } else{
+            rr.querySelector('img').classList.remove('grayscale');
+        }
+        rrToggle = !rrToggle;
+        writeStageStrikingVisualizer();
+    });
+
+    document.getElementById('resetStages').addEventListener("click", resetStageStatuses);
 }
 
-let countdownTimer;
-let remainingTime;
+function resetStageStatuses(){
+    console.log('here');
+    const stages = document.getElementsByTagName('button');
+    for(let i = 0; i < stages.length; i++){
+        console.log(i);
+        stages[i].querySelector('img').classList.remove('grayscale');
+    }
+    bobToggle = false;
+    wfToggle = false;
+    jrbToggle = false;
+    ccmToggle = false;
+    bbhToggle = false;
+    hmcToggle = false;
+    lllToggle = false;
+    sslToggle = false;
+    dddToggle = false;
+    slToggle = false;
+    wdwToggle = false;
+    thiToggle = false;
+    ttmToggle = false;
+    ttcToggle = false;
+    rrToggle = false;
+}
 
 function toggleStageStrikingMenu(){
     if(stageStrikeCheckBox.checked == false){
@@ -377,6 +542,7 @@ function goBack() {
     document.getElementById('goBack').style.left = "179px";
     movedSettings = false;
     movedStageStriker = false;
+    writeStageStrikingVisualizer();
 }
 
 function moveViewportStageStriker() {
@@ -386,6 +552,7 @@ function moveViewportStageStriker() {
         document.getElementById('overlay').style.opacity = "25%";
         document.getElementById('goBack').style.display = "block";
         movedStageStriker = true;
+        writeStageStrikingVisualizer();
     }
 }
 
@@ -730,6 +897,30 @@ function setScore(score, tick1, tick2, tick3) {
             }
         }
     }
+}
+
+function writeStageStrikingVisualizer() {
+    let stageStrikingJson = {
+        displayVisualizer: movedStageStriker,
+        bob: bobToggle,
+        wf: wfToggle,
+        jrb: jrbToggle,
+        ccm: ccmToggle,
+        bbh: bbhToggle,
+        hmc: hmcToggle,
+        lll: lllToggle,
+        ssl: sslToggle,
+        ddd: dddToggle,
+        sl: slToggle,
+        wdw: wdwToggle,
+        thi: thiToggle,
+        ttm: ttmToggle,
+        ttc: ttcToggle,
+        rr: rrToggle,
+    };
+
+    let data = JSON.stringify(stageStrikingJson, null, 2);
+    fs.writeFileSync(path.join(streamToolDirectory, "Texts", "StageStrikingInfo.json"), data);
 }
 
 function writeScoreboard() {

@@ -4,6 +4,7 @@
 }
 
 :root {
+  --debug: #00ff11;
   --text1: #ececec;
   --text2: #b6b6b6;
   --bg1: #131318;
@@ -504,7 +505,7 @@ input[type='file'] {
 #stageStrikeRegion{
   width: 32px;
   background-color: var(--bg3);
-  display: none;
+  display: flex;
 }
 
 #settingsRegion {
@@ -571,20 +572,22 @@ input[type='file'] {
   padding: 10px;
 }
 
-
-.stageButton {
+button {
   background: none;
   border: 2px solid;
-  /* border-color: var(--bg4); */
   line-height: 1;
   padding: 0;
   width: 45px;
   height: 45px;
 }
 
-.stageButton img {
+button img {
   display: block;
   width: 100%;
+}
+
+button:hover {
+  border-color: var(--selected);
 }
 
 #bob{
@@ -705,6 +708,10 @@ input[type='file'] {
 
 #rr:hover{
   border-color: var(--selected);
+}
+
+.grayscale {
+  filter: grayscale(100%);
 }
 
 /* settings section */
